@@ -18,11 +18,10 @@ public class Ruolo {
     @Setter(AccessLevel.NONE)
     private UUID id;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true)
-    private RuoloNome ruolo;
+    private String ruolo;
 
-    public Ruolo(RuoloNome ruolo) {
+    public Ruolo(String ruolo) {
         this.ruolo = ruolo;
     }
 }
