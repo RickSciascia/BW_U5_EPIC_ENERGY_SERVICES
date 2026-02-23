@@ -21,7 +21,7 @@ public class Fattura {
     private long id;
 
     private LocalDate data;
-    private int importo;
+    private double importo;
     private int numero;
 
   @ManyToOne

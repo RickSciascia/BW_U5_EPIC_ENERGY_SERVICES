@@ -4,19 +4,21 @@ import BW_U5.EPIC_ENERGY_SERVICES.entities.Cliente;
 import BW_U5.EPIC_ENERGY_SERVICES.entities.Stato_fattura;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.FutureOrPresent;
 import lombok.Getter;
 
 import java.time.LocalDate;
 
 @Getter
-public class FatturePayload {
+public class FatturaPayload {
+    @FutureOrPresent
     private LocalDate data;
-    private int importo;
+    private double importo;
     private int numero;
     private long stato_fattura;
     private long cliente;
 
-    public FatturePayload(LocalDate data, int importo, int numero, long stato_fattura, long cliente) {
+    public FatturaPayload(LocalDate data, double importo, int numero, long stato_fattura, long cliente) {
         this.data = data;
         this.importo = importo;
         this.numero = numero;
