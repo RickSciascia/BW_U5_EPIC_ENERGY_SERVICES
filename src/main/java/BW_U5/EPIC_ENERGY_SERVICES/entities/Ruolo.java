@@ -3,8 +3,6 @@ package BW_U5.EPIC_ENERGY_SERVICES.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.UUID;
-
 @Entity
 @Table(name = "ruoli")
 @Getter
@@ -14,9 +12,9 @@ import java.util.UUID;
 public class Ruolo {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
-    private UUID id;
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String ruolo;

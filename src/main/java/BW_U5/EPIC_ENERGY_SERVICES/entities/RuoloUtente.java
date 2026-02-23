@@ -3,8 +3,6 @@ package BW_U5.EPIC_ENERGY_SERVICES.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.UUID;
-
 @Entity
 @Table(
         name = "ruoli_utenti",
@@ -20,15 +18,15 @@ import java.util.UUID;
 public class RuoloUtente {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
-    private UUID id;
+    private Long id;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "id_utente", nullable = false)
     private Utente utente;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "id_ruolo", nullable = false)
     private Ruolo ruolo;
 
