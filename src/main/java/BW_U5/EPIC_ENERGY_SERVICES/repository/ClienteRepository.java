@@ -1,24 +1,23 @@
 package BW_U5.EPIC_ENERGY_SERVICES.repository;
 
+import BW_U5.EPIC_ENERGY_SERVICES.entities.Cliente;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.awt.print.Pageable;
-import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.Optional;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
-    // Filtro per parte del nome (Ragione Sociale)
-    Page<Cliente> findByRagioneSocialeContainingIgnoreCase(String nome, Pageable pageable);
+    // Ricerca per ID (già inclusa in JpaRepository, ma eccola per chiarezza)
+    Optional<Cliente> findById(Long id);
 
-    // Filtro per fatturato annuale
-    Page<Cliente> findByFatturatoAnnualeBetween(BigDecimal min, BigDecimal max, Pageable pageable);
+    // Ricerca per Email aziendale
+    Optional<Cliente> findByEmail(String email);
 
-    // Filtro per data di inserimento
-    Page<Cliente> findByDataInserimentoBetween(LocalDate start, LocalDate end, Pageable pageable);
+    // Ricerca per Partita IVA
+    Optional<Cliente> findByPartitaIva(String partitaIva);
 
-    // Filtro per data ultimo contatto
-    Page<Cliente> findByDataUltimoContattoBetween(LocalDate start, LocalDate end, Pageable pageable);
-
+    // Ricerca per Ragione Sociale esatta
+    Optional<Cliente> findByRagioneSociale(String ragioneSociale);
 }
