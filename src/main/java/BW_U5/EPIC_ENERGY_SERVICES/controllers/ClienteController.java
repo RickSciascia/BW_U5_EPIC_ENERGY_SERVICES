@@ -36,7 +36,7 @@ public class ClienteController {
 	public Page<Cliente> findAllClientes(
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size,
-			@RequestParam(defaultValue = "surname") String orderBY) {
+			@RequestParam(defaultValue = "ragioneSociale") String orderBY) {
 		return clienteService.findAllClientes(page, size, orderBY);
 	}
 
