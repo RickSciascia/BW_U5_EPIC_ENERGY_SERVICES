@@ -37,10 +37,17 @@ public class FatturaController {
         this.fatturaService.findByIdAndDelete(idFattura);
     }
 
+
     //GET
     @GetMapping("/{idFattura}")
     public Fattura findById(@PathVariable long idFattura) {
         return this.fatturaService.findById(idFattura);
+    }
+
+    //GET
+    @GetMapping("/{numero}")
+    public Fattura findByNumero(@PathVariable int numero) {
+        return this.fatturaService.findByNumero(numero);
     }
 
     //GET
