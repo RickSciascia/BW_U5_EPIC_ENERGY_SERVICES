@@ -14,7 +14,7 @@ public interface FatturaRepository extends JpaRepository<Fattura, Long> {
     Optional<Fattura> findById(Long id);
 
     // Ricerca per Numero Fattura (univoco per il business)
-    Optional<Fattura> findByNumero(Integer numero);
+    Optional<Fattura> findByNumero(int numero);
 
     // Esempio di logica: trovare l'ultima fattura di un cliente (opzionale)
     Optional<Fattura> findFirstByClienteOrderByDataDesc(Cliente cliente);
