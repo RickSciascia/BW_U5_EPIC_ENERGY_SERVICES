@@ -70,7 +70,6 @@ public class ClienteService {
 				clienteDTO.nomeContatto(),
 				clienteDTO.cognomeContatto(),
 				clienteDTO.telefonoDiContatto(),
-				clienteDTO.logoAziendale(),
 				clienteDTO.tipoCliente(),
 				indirizzoLegale,
 				indirizzoCommerciale

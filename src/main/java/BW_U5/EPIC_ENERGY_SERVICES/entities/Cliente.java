@@ -64,7 +64,6 @@ public class Cliente {
 			String nomeContatto,
 			String cognomeContatto,
 			long telefonoDiContatto,
-			String logoAziendale,
 			TipoCliente tipoCliente,
 			Indirizzo indirizzoLegale,
 			Indirizzo indirizzoCommerciale
@@ -81,7 +80,9 @@ public class Cliente {
 		this.nomeContatto = nomeContatto;
 		this.cognomeContatto = cognomeContatto;
 		this.telefonoDiContatto = telefonoDiContatto;
-		this.logoAziendale = logoAziendale;
+		this.logoAziendale = "https://ui-avatars.com/api/?name=" +
+				ragioneSociale;
+		;
 		this.tipoCliente = tipoCliente;
 		this.indirizzoLegale = indirizzoLegale;
 		this.indirizzoCommerciale = indirizzoCommerciale;
