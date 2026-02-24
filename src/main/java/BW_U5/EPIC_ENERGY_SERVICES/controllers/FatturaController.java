@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("fattura")
+@RequestMapping("/fattura")
 public class FatturaController {
 
     private FatturaService fatturaService;
@@ -39,13 +39,13 @@ public class FatturaController {
 
 
     //GET
-    @GetMapping("/{idFattura}")
+    @GetMapping("/id/{idFattura}")
     public Fattura findById(@PathVariable long idFattura) {
         return this.fatturaService.findById(idFattura);
     }
 
     //GET
-    @GetMapping("/{numero}")
+    @GetMapping("/numero/{numero}")
     public Fattura findByNumero(@PathVariable int numero) {
         return this.fatturaService.findByNumero(numero);
     }

@@ -62,6 +62,7 @@ public class FatturaService {
     public void findByIdAndDelete(long idFattura) {
         Fattura found = this.findById(idFattura);
         this.fatturaRepository.delete(found);
+        log.info("La fattura con id "+found.getId()+" del cliente " +found.getCliente()+ " è stato eliminata con successo!");
     }
 
     //MODIFICA FATTURA
