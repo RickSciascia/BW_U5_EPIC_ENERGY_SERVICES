@@ -31,7 +31,6 @@ public class Cliente {
 	@Setter(AccessLevel.NONE)
 	private long fatturatoAnnuale;
 	@Column(nullable = false, unique = true)
-	@Setter(AccessLevel.NONE)
 	private String pec;
 	@Column(nullable = false)
 	private long numeroDiTelefono;
