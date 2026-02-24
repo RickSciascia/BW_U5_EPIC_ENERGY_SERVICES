@@ -1,6 +1,7 @@
 package BW_U5.EPIC_ENERGY_SERVICES.services;
 
 import BW_U5.EPIC_ENERGY_SERVICES.entities.Cliente;
+import BW_U5.EPIC_ENERGY_SERVICES.exceptions.NotFoundException;
 import BW_U5.EPIC_ENERGY_SERVICES.payloads.ClienteDTO;
 import BW_U5.EPIC_ENERGY_SERVICES.repository.ClienteRepository;
 import com.cloudinary.Cloudinary;
@@ -71,13 +72,13 @@ public class ClienteService {
 	// get cliente by id
 
 	public Cliente findById(long id) {
-		return clienteRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Cliente con id " + id + " non trovato"));
+		return clienteRepository.findById(id).orElseThrow(() -> new NotFoundException("Cliente con id " + id + " non trovato"));
 	}
 
 	// get cliente by email
 
 	public Cliente findByEmail(String email) {
-		return clienteRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("Cliente con email " + email + " non trovato"));
+		return clienteRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Cliente con email " + email + " non trovato"));
 	}
 
 	//------------------------------------- P U T ----------------------------------------------

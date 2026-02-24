@@ -1,6 +1,7 @@
 package BW_U5.EPIC_ENERGY_SERVICES.services;
 
 import BW_U5.EPIC_ENERGY_SERVICES.entities.Utente;
+import BW_U5.EPIC_ENERGY_SERVICES.exceptions.NotFoundException;
 import BW_U5.EPIC_ENERGY_SERVICES.payloads.UtenteDTO;
 import BW_U5.EPIC_ENERGY_SERVICES.repository.UtenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,17 +63,17 @@ public class UtenteService {
 
     public Utente findById(long id) {
         return utenteRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Utente con id " + id + " non trovato"));
+                .orElseThrow(() -> new NotFoundException("Utente con id " + id + " non trovato"));
     }
 
     public Utente findByEmail(String email) {
         return utenteRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Utente con email " + email + " non trovato"));
+                .orElseThrow(() -> new NotFoundException("Utente con email " + email + " non trovato"));
     }
 
     public Utente findByUsername(String username) {
         return utenteRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("Utente con username " + username + " non trovato"));
+                .orElseThrow(() -> new NotFoundException("Utente con username " + username + " non trovato"));
     }
 
     //per eliminare

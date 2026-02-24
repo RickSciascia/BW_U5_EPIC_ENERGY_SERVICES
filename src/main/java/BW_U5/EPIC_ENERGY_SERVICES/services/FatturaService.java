@@ -3,6 +3,7 @@ package BW_U5.EPIC_ENERGY_SERVICES.services;
 import BW_U5.EPIC_ENERGY_SERVICES.entities.Cliente;
 import BW_U5.EPIC_ENERGY_SERVICES.entities.Fattura;
 import BW_U5.EPIC_ENERGY_SERVICES.entities.Stato_fattura;
+import BW_U5.EPIC_ENERGY_SERVICES.exceptions.NotFoundException;
 import BW_U5.EPIC_ENERGY_SERVICES.payloads.FatturaPayload;
 import BW_U5.EPIC_ENERGY_SERVICES.repository.ClienteRepository;
 import BW_U5.EPIC_ENERGY_SERVICES.repository.FatturaRepository;
@@ -35,10 +36,10 @@ public class FatturaService {
     public Fattura salvaFattura(FatturaPayload payload){
         //find by id fattura
         Cliente cliente = clienteRepository.findById(payload.getCliente())
-                        .orElseThrow(() -> new RuntimeException("Cliente non trovato"));
+                        .orElseThrow(() -> new NotFoundException("Cliente non trovato"));
         //find by id stato fattura
         Stato_fattura statoFattura = statoFatturaRepository.findById(payload.getStato_fattura())
-                .orElseThrow(() -> new RuntimeException("Stato della fattura non trovato"));
+                .orElseThrow(() -> new NotFoundException("Stato della fattura non trovato"));
         Fattura newFattura = new Fattura(payload.getData(), payload.getImporto(), payload.getNumero(),
                 statoFattura, cliente);
         Fattura fatturaSalvata = this.fatturaRepository.save(newFattura);
@@ -54,7 +55,7 @@ public class FatturaService {
     //FIND BY ID
     public Fattura findById(long idFattura) {
         return fatturaRepository.findById(idFattura)
-                .orElseThrow(() -> new IllegalArgumentException("La fattura con id " + idFattura + " non è stata trovata"));
+                .orElseThrow(() -> new NotFoundException("La fattura con id " + idFattura + " non è stata trovata"));
     }
 
     //ELIMINA FATTURA
@@ -67,10 +68,10 @@ public class FatturaService {
     public Fattura findByIdAndUpdate(long idFattura, FatturaPayload payload) {
         //find by id fattura
         Cliente cliente = clienteRepository.findById(payload.getCliente())
-                .orElseThrow(() -> new RuntimeException("Cliente non trovato"));
+                .orElseThrow(() -> new NotFoundException("Cliente non trovato"));
         //find by id stato fattura
         Stato_fattura statoFattura = statoFatturaRepository.findById(payload.getStato_fattura())
-                .orElseThrow(() -> new RuntimeException("Stato della fattura non trovato"));
+                .orElseThrow(() -> new NotFoundException("Stato della fattura non trovato"));
 
         Fattura found = this.findById(idFattura);
         found.setData(payload.getData());
@@ -87,6 +88,6 @@ public class FatturaService {
     //FIND BY NUMERO FATTURA
     public Fattura findByNumero(int numeroFattura){
         return fatturaRepository.findByNumero(numeroFattura)
-                .orElseThrow(() -> new IllegalArgumentException("La fattura con il numero " + numeroFattura + " non è stata trovata"));
+                .orElseThrow(() -> new NotFoundException("La fattura con il numero " + numeroFattura + " non è stata trovata"));
     }
 }
