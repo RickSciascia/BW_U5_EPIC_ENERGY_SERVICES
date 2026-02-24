@@ -12,27 +12,28 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Indirizzo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Setter(AccessLevel.NONE)
-    private long id;
-    @Column(nullable = false)
-    private String via;
-    @Column(nullable = false)
-    private String civico;
-    @Column(nullable = false)
-    private String cap;
-    @ManyToOne
-    @JoinColumn(name = "id_comune", nullable = false)
-    private Comune comune;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Setter(AccessLevel.NONE)
+	private long id;
+	@Column(nullable = false)
+	private String via;
+	@Column(nullable = false)
+	private String civico;
+	@Column(nullable = false)
+	private String cap;
+	@ManyToOne
+	@JoinColumn(name = "id_comune", nullable = false)
+	private Comune comune;
 
-    public Indirizzo(){}
+	public Indirizzo() {
+	}
 
-    public Indirizzo(String via, String civico, String cap, Comune comune) {
-        this.via = via;
-        this.civico = civico;
-        this.cap = cap;
-        this.comune = comune;
-    }
+	public Indirizzo(String via, String civico, String cap, Comune comune) {
+		this.via = via;
+		this.civico = civico;
+		this.cap = cap;
+		this.comune = comune;
+	}
 
 }

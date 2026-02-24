@@ -46,9 +46,9 @@ public class Cliente {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private TipoCliente tipoCliente;
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private Indirizzo indirizzoLegale;
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private Indirizzo indirizzoCommerciale;
 
 	public Cliente(

@@ -1,9 +1,12 @@
 package BW_U5.EPIC_ENERGY_SERVICES.services;
 
 import BW_U5.EPIC_ENERGY_SERVICES.entities.Cliente;
+import BW_U5.EPIC_ENERGY_SERVICES.entities.Comune;
+import BW_U5.EPIC_ENERGY_SERVICES.entities.Indirizzo;
 import BW_U5.EPIC_ENERGY_SERVICES.exceptions.NotFoundException;
 import BW_U5.EPIC_ENERGY_SERVICES.payloads.ClienteDTO;
 import BW_U5.EPIC_ENERGY_SERVICES.repository.ClienteRepository;
+import BW_U5.EPIC_ENERGY_SERVICES.repository.ComuneRepository;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +24,13 @@ public class ClienteService {
 
 	private final ClienteRepository clienteRepository;
 	private final Cloudinary cloudinary;
+	private final ComuneRepository comuneRepository;
 
 	@Autowired
-	public ClienteService(ClienteRepository clienteRepository, Cloudinary cloudinary) {
+	public ClienteService(ClienteRepository clienteRepository, Cloudinary cloudinary, ComuneRepository comuneRepository) {
 		this.clienteRepository = clienteRepository;
 		this.cloudinary = cloudinary;
+		this.comuneRepository = comuneRepository;
 	}
 
 	//------------------------------------- P O S T ----------------------------------------------
@@ -36,6 +41,22 @@ public class ClienteService {
 		this.clienteRepository.findByEmail(clienteDTO.email()).ifPresent(cliente -> {
 			throw new IllegalArgumentException("Cliente already exists");
 		});
+		Comune comuneIndirizzoLegale = comuneRepository.findById(clienteDTO.indirizzoLegale().idComune()).orElseThrow(() -> new NotFoundException("Comune non trovato"));
+
+		Comune comuneIndirizzoCommerciale = comuneRepository.findById(clienteDTO.indirizzoCommerciale().idComune()).orElseThrow(() -> new NotFoundException("Comune non trovato"));
+
+		Indirizzo indirizzoLegale = new Indirizzo(
+				clienteDTO.indirizzoLegale().via(),
+				clienteDTO.indirizzoLegale().civico(),
+				clienteDTO.indirizzoLegale().cap(),
+				comuneIndirizzoLegale);
+
+		Indirizzo indirizzoCommerciale = new Indirizzo(
+				clienteDTO.indirizzoCommerciale().via(),
+				clienteDTO.indirizzoCommerciale().civico(),
+				clienteDTO.indirizzoCommerciale().cap(),
+				comuneIndirizzoCommerciale);
+
 		Cliente cliente = new Cliente(
 				clienteDTO.ragioneSociale(),
 				clienteDTO.partitaIva(),
@@ -51,8 +72,9 @@ public class ClienteService {
 				clienteDTO.telefonoDiContatto(),
 				clienteDTO.logoAziendale(),
 				clienteDTO.tipoCliente(),
-				clienteDTO.indirizzoLegale(),
-				clienteDTO.indirizzoCommerciale()
+				indirizzoLegale,
+				indirizzoCommerciale
+
 		);
 		return clienteRepository.save(cliente);
 	}
@@ -87,6 +109,22 @@ public class ClienteService {
 
 	public Cliente updateCliente(long id, ClienteDTO clienteDTO) {
 		Cliente cliente = this.findById(id);
+
+		Comune comuneIndirizzoCommerciale = comuneRepository.findById(clienteDTO.indirizzoCommerciale().idComune()).orElseThrow(() -> new NotFoundException("Comune non trovato"));
+		Comune comuneIndirizzoLegale = comuneRepository.findById(clienteDTO.indirizzoLegale().idComune()).orElseThrow(() -> new NotFoundException("Comune non trovato"));
+
+		Indirizzo indirizzoCommerciale = new Indirizzo(
+				clienteDTO.indirizzoCommerciale().via(),
+				clienteDTO.indirizzoCommerciale().civico(),
+				clienteDTO.indirizzoCommerciale().cap(),
+				comuneIndirizzoCommerciale);
+
+		Indirizzo indirizzoLegale = new Indirizzo(
+				clienteDTO.indirizzoLegale().via(),
+				clienteDTO.indirizzoLegale().civico(),
+				clienteDTO.indirizzoLegale().cap(),
+				comuneIndirizzoLegale);
+
 		cliente.setRagioneSociale(clienteDTO.ragioneSociale());
 		cliente.setEmail(clienteDTO.email());
 		cliente.setDataInserimento(clienteDTO.dataInserimento());
@@ -99,8 +137,9 @@ public class ClienteService {
 		cliente.setTelefonoDiContatto(clienteDTO.telefonoDiContatto());
 		cliente.setLogoAziendale(clienteDTO.logoAziendale());
 		cliente.setTipoCliente(clienteDTO.tipoCliente());
-		cliente.setIndirizzoLegale(clienteDTO.indirizzoLegale());
-		cliente.setIndirizzoCommerciale(clienteDTO.indirizzoCommerciale());
+		cliente.setIndirizzoCommerciale(indirizzoCommerciale);
+		cliente.setIndirizzoLegale(indirizzoLegale);
+
 
 		return clienteRepository.save(cliente);
 	}
