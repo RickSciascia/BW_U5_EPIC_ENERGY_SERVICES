@@ -1,5 +1,6 @@
 package BW_U5.EPIC_ENERGY_SERVICES.payloads;
 
+import BW_U5.EPIC_ENERGY_SERVICES.entities.Indirizzo;
 import BW_U5.EPIC_ENERGY_SERVICES.enums.TipoCliente;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -36,6 +37,6 @@ public record ClienteDTO(
 		String logoAziendale,
 		@NotNull
 		TipoCliente tipoCliente,
-		IndirizzoDTO indirizzoLegale,
-		IndirizzoDTO indirizzoCommerciale) {
+		Indirizzo indirizzoLegale,
+		Indirizzo indirizzoCommerciale) {
 }
