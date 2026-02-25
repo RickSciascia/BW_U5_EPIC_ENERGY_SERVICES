@@ -32,4 +32,11 @@ public class JWTSecret {
             throw new UnauthorizedException("Problemi col token! Effettua di nuovo il login!");
         }
 }
+    public long extractIdFromToken(String token){
+        return Long.parseLong(Jwts.parser().verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject());
+    }
 }
