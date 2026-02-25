@@ -29,7 +29,7 @@ public class Cliente {
 	private LocalDate dataInserimento;
 	private LocalDate dataUltimoContatto;
 	@Setter(AccessLevel.NONE)
-	private long fatturatoAnnuale;
+	private double fatturatoAnnuale;
 	@Column(nullable = false, unique = true)
 	private String pec;
 	@Column(nullable = false)
@@ -57,7 +57,7 @@ public class Cliente {
 			String email,
 			LocalDate dataInserimento,
 			LocalDate dataUltimoContatto,
-			long fatturatoAnnuale,
+			double fatturatoAnnuale,
 			String pec,
 			long numeroDiTelefono,
 			String emailDiContatto,
