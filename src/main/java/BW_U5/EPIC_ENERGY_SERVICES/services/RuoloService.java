@@ -29,6 +29,14 @@ public class RuoloService {
         return ruoloSalvato;
     }
 
+    public Ruolo editRuolo(RuoloDTO payload, long idRuolo) {
+        Ruolo ruoloDaAggiornare =  this.findRuoloById(idRuolo);
+        ruoloDaAggiornare.setRuolo(payload.ruolo());
+        Ruolo ruoloAggiornato = this.ruoloRepository.save(ruoloDaAggiornare);
+        System.out.println("Ruolo modificato in: " + ruoloAggiornato.getRuolo());
+        return ruoloAggiornato;
+    }
+
 //    GET
 
     public List<Ruolo> findAllRuoli() {
