@@ -18,11 +18,15 @@ public class UtenteService {
 
     private final UtenteRepository utenteRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailSender emailSender;
+
 
     @Autowired
-    public UtenteService(UtenteRepository utenteRepository, PasswordEncoder passwordEncoder) {
+    public UtenteService(UtenteRepository utenteRepository, PasswordEncoder passwordEncoder, EmailSender emailSender) {
         this.utenteRepository = utenteRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailSender = emailSender;
+
     }
 
     //POST
@@ -48,7 +52,27 @@ public class UtenteService {
         // per la password
         utente.setPassword(passwordEncoder.encode(utenteDTO.password()));
 
-        return utenteRepository.save(utente);
+
+        // 4 salvataggio nel db
+
+        Utente savedUtente = utenteRepository.save(utente);
+
+        // 5 invio dell email di benvenuto
+
+
+        try {
+            emailSender.sendWelcomeEmail(savedUtente);
+        } catch (Exception e) {
+            System.out.println("Errore invio email: " + e.getMessage());
+        }
+
+        return savedUtente;
+
+
+
+
+
+
     }
 
     //Get
