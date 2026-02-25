@@ -60,14 +60,14 @@ public class ClienteController {
 		return clienteService.findByRagioneSociale(ragioneSociale);
 	}
 
-	@GetMapping("/clients/data_inserimento")
-	public List<Cliente> getByDataInserimento(@RequestParam LocalDate dataInserimento) {
-		return clienteService.findByDataInserimento(dataInserimento);
+	@GetMapping("/clients/{data_inserimento}/{data_inserimento2}")
+	public List<Cliente> getByDataInserimento(@RequestParam LocalDate dataInserimento, @RequestParam LocalDate dataInserimento2) {
+		return clienteService.findByDataInserimento(dataInserimento, dataInserimento2);
 	}
 
-	@GetMapping("/clients/data_ultimocontatto")
-	public List<Cliente> getByDataUltimoContatto(@RequestParam LocalDate dataUltimoContatto) {
-		return clienteService.findByDataUltimoContatto(dataUltimoContatto);
+	@GetMapping("/clients/{data_ultimocontatto}/{data_inserimento2}")
+	public List<Cliente> getByDataUltimoContatto(@RequestParam LocalDate dataUltimoContatto, @RequestParam LocalDate dataUltimoContatto2) {
+		return clienteService.findByDataUltimoContatto(dataUltimoContatto, dataUltimoContatto2);
 	}
 
 
