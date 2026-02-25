@@ -1,5 +1,6 @@
 package BW_U5.EPIC_ENERGY_SERVICES.services;
 
+import BW_U5.EPIC_ENERGY_SERVICES.entities.Ruolo;
 import BW_U5.EPIC_ENERGY_SERVICES.entities.Utente;
 import BW_U5.EPIC_ENERGY_SERVICES.exceptions.NotFoundException;
 import BW_U5.EPIC_ENERGY_SERVICES.exceptions.ValidationException;
@@ -13,20 +14,23 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder; // Assicurati di avere questa dipendenza
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UtenteService {
 
     private final UtenteRepository utenteRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailSender emailSender;
+    private final RuoloService ruoloService;
 
 
     @Autowired
-    public UtenteService(UtenteRepository utenteRepository, PasswordEncoder passwordEncoder, EmailSender emailSender) {
+    public UtenteService(UtenteRepository utenteRepository, PasswordEncoder passwordEncoder, EmailSender emailSender, RuoloService ruoloService) {
         this.utenteRepository = utenteRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailSender = emailSender;
-
+        this.ruoloService = ruoloService;
     }
 
     //POST
@@ -48,6 +52,8 @@ public class UtenteService {
         utente.setEmail(utenteDTO.email());
         utente.setNome(utenteDTO.nome());
         utente.setCognome(utenteDTO.cognome());
+        Ruolo ruoloUtente = ruoloService.findRuoloById(1);
+        utente.setRuoli(List.of(ruoloUtente));
 
         // per la password
         utente.setPassword(passwordEncoder.encode(utenteDTO.password()));
@@ -67,12 +73,48 @@ public class UtenteService {
         }
 
         return savedUtente;
+    }
+
+    //POST
+
+    public Utente saveAdmin(UtenteDTO utenteDTO) {
+        // 1 Controllo unicita email
+        this.utenteRepository.findByEmail(utenteDTO.email()).ifPresent(utente -> {
+            throw new ValidationException("L'email " + utenteDTO.email() + " è già in uso.");
+        });
+
+        // 2 Controllo unicita username
+        this.utenteRepository.findByUsername(utenteDTO.username()).ifPresent(utente -> {
+            throw new ValidationException("Lo username " + utenteDTO.username() + " è già in uso.");
+        });
+
+        // 3 Mapping DTO,entity con codifica password
+        Utente utente = new Utente();
+        utente.setUsername(utenteDTO.username());
+        utente.setEmail(utenteDTO.email());
+        utente.setNome(utenteDTO.nome());
+        utente.setCognome(utenteDTO.cognome());
+        Ruolo ruoloAdmin = ruoloService.findRuoloById(2);
+        utente.setRuoli(List.of(ruoloAdmin));
+
+        // per la password
+        utente.setPassword(passwordEncoder.encode(utenteDTO.password()));
 
 
+        // 4 salvataggio nel db
+
+        Utente savedUtente = utenteRepository.save(utente);
+
+        // 5 invio dell email di benvenuto
 
 
+        try {
+            emailSender.sendWelcomeEmail(savedUtente);
+        } catch (Exception e) {
+            System.out.println("Errore invio email: " + e.getMessage());
+        }
 
-
+        return savedUtente;
     }
 
     //Get

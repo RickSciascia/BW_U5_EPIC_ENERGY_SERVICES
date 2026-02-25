@@ -1,9 +1,12 @@
 package BW_U5.EPIC_ENERGY_SERVICES.repository;
 
+import BW_U5.EPIC_ENERGY_SERVICES.entities.Ruolo;
 import BW_U5.EPIC_ENERGY_SERVICES.entities.Utente;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -13,4 +16,7 @@ public interface UtenteRepository extends JpaRepository<Utente, Long> {
     Optional<Utente> findByUsername(String username);
     // gestire la ricerca dell' utente
     Optional<Utente> findByEmail(String email);
+    // recupera una lista di utenti in base al ruolo (query fatta principalmente per creare admin)
+//    @Query("SELECT u FROM Utente u WHERE :ruolo MEMBER OF u.ruoli")
+    List<Utente> findByRuoli_Ruolo(String ruolo);
 }

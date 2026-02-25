@@ -35,8 +35,11 @@ public class Utente implements UserDetails {
     private String cognome;
     private String avatar;
 
-    @OneToMany(mappedBy = "utente")
-    private List<RuoloUtente> ruoli;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "ruoli_utenti",
+    joinColumns = @JoinColumn(name = "id_utente", nullable = false),
+    inverseJoinColumns = @JoinColumn(name = "id_ruolo", nullable = false))
+    private List<Ruolo> ruoli;
 
     public Utente(String username, String email, String password, String nome, String cognome, String avatar) {
         this.username = username;
@@ -49,8 +52,7 @@ public class Utente implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<Ruolo> ruoloUtenteList = ruoli.stream().map(utente->utente.getRuolo()).toList();
-        return List.of(new SimpleGrantedAuthority(ruoloUtenteList.toString()));
+        return List.of(new SimpleGrantedAuthority(this.ruoli.toString()));
     }
 
     @Override

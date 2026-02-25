@@ -2,9 +2,17 @@ package BW_U5.EPIC_ENERGY_SERVICES.runners;
 
 import BW_U5.EPIC_ENERGY_SERVICES.entities.Comune;
 import BW_U5.EPIC_ENERGY_SERVICES.entities.Provincia;
+import BW_U5.EPIC_ENERGY_SERVICES.entities.Ruolo;
+import BW_U5.EPIC_ENERGY_SERVICES.entities.Utente;
 import BW_U5.EPIC_ENERGY_SERVICES.exceptions.NotFoundException;
+import BW_U5.EPIC_ENERGY_SERVICES.payloads.RuoloDTO;
+import BW_U5.EPIC_ENERGY_SERVICES.payloads.UtenteDTO;
 import BW_U5.EPIC_ENERGY_SERVICES.repository.ComuneRepository;
 import BW_U5.EPIC_ENERGY_SERVICES.repository.ProvinciaRepository;
+import BW_U5.EPIC_ENERGY_SERVICES.repository.RuoloRepository;
+import BW_U5.EPIC_ENERGY_SERVICES.repository.UtenteRepository;
+import BW_U5.EPIC_ENERGY_SERVICES.services.RuoloService;
+import BW_U5.EPIC_ENERGY_SERVICES.services.UtenteService;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
@@ -20,9 +28,27 @@ public class ImporterRunner implements CommandLineRunner {
 	private ProvinciaRepository provinciaRepository;
 	@Autowired
 	private ComuneRepository comuneRepository;
+    @Autowired
+    private RuoloService ruoloService;
+    @Autowired
+    private RuoloRepository ruoloRepository;
+    @Autowired
+    private UtenteRepository utenteRepository;
+    @Autowired
+    private UtenteService utenteService;
 
 	@Override
 	public void run(String... args) throws Exception {
+        if(ruoloRepository.count() == 0 ) {
+            RuoloDTO UTENTE = new RuoloDTO("UTENTE");
+            RuoloDTO ADMIN = new RuoloDTO("ADMIN");
+            ruoloService.saveNuovoRuolo(UTENTE);
+            ruoloService.saveNuovoRuolo(ADMIN);
+        }
+        if(utenteRepository.findByRuoli_Ruolo("ADMIN").isEmpty()) {
+            UtenteDTO utenteAdmin = new UtenteDTO("ADMIN","admin@admin.it","Admin1234","AMMINISTRATORE","DI SISTEMA","https://placecats.com/300/300");
+            utenteService.saveAdmin(utenteAdmin);
+        }
 
 		if (provinciaRepository.count() == 0) {
 			try {
