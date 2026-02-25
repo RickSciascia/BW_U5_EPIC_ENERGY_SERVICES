@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class ClienteService {
@@ -84,7 +86,7 @@ public class ClienteService {
 	// get all cliente
 
 	public Page<Cliente> findAllClientes(int size, int page, String sortBy) {
-		if (page < 0) page = 0;
+		if (page <= 0) page = 1;
 		if (size < 0 || size > 150) size = 10;
 		if (sortBy == null) sortBy = "name";
 		Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
@@ -102,6 +104,25 @@ public class ClienteService {
 	public Cliente findByEmail(String email) {
 		return clienteRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Cliente con email " + email + " non trovato"));
 	}
+
+	// ----------------------------------------- QUERIES -----------------------------------------
+
+	public List<Cliente> findByRagioneSociale(String ragioneSociale) {
+		return clienteRepository.findByRagioneSocialeContainingIgnoreCase(ragioneSociale);
+	}
+
+	public List<Cliente> findByFatturatoAnnuale(double fatturatoAnnuale) {
+		return clienteRepository.findByFatturatoAnnualeGreaterThan(fatturatoAnnuale);
+	}
+
+	public List<Cliente> findByDataInserimento(LocalDate dataInserimento) {
+		return clienteRepository.findByDataInserimento(dataInserimento);
+	}
+
+	public List<Cliente> findByDataUltimoContatto(LocalDate dataUltimoContatto) {
+		return clienteRepository.findByDataUltimoContatto(dataUltimoContatto);
+	}
+
 
 	//------------------------------------- P U T ----------------------------------------------
 
