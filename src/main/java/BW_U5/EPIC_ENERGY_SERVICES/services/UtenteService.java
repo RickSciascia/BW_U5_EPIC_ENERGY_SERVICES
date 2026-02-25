@@ -2,6 +2,7 @@ package BW_U5.EPIC_ENERGY_SERVICES.services;
 
 import BW_U5.EPIC_ENERGY_SERVICES.entities.Utente;
 import BW_U5.EPIC_ENERGY_SERVICES.exceptions.NotFoundException;
+import BW_U5.EPIC_ENERGY_SERVICES.exceptions.ValidationException;
 import BW_U5.EPIC_ENERGY_SERVICES.payloads.UtenteDTO;
 import BW_U5.EPIC_ENERGY_SERVICES.repository.UtenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +30,12 @@ public class UtenteService {
     public Utente saveUtente(UtenteDTO utenteDTO) {
         // 1 Controllo unicita email
         this.utenteRepository.findByEmail(utenteDTO.email()).ifPresent(utente -> {
-            throw new IllegalArgumentException("L'email " + utenteDTO.email() + " è già in uso.");
+            throw new ValidationException("L'email " + utenteDTO.email() + " è già in uso.");
         });
 
         // 2 Controllo unicita username
         this.utenteRepository.findByUsername(utenteDTO.username()).ifPresent(utente -> {
-            throw new IllegalArgumentException("Lo username " + utenteDTO.username() + " è già in uso.");
+            throw new ValidationException("Lo username " + utenteDTO.username() + " è già in uso.");
         });
 
         // 3 Mapping DTO,entity con codifica password

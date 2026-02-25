@@ -22,12 +22,6 @@ public class ErrorHandler {
         return new ErrorsPayload(ex.getMessage(), LocalDateTime.now());
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.ALREADY_REPORTED)
-    public ErrorsPayload handleNotFound(IllegalArgumentException ex) {
-        return new ErrorsPayload(ex.getMessage(), LocalDateTime.now());
-    }
-
     @ExceptionHandler(ValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorsPayload handleValidationException(ValidationException ex) {
