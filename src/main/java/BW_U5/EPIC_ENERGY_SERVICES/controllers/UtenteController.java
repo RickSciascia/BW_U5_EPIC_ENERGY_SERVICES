@@ -19,14 +19,6 @@ public class UtenteController {
         this.utenteService = utenteService;
     }
 
-    // POST - Registrazione
-    //POST http://localhost:3001/utenti
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Utente saveUtente(@RequestBody UtenteDTO body) {
-        return utenteService.saveUtente(body);
-    }
-
     // GET ALL - Lista utenti
     // GET http://localhost:3001/utenti?page=0&size=10&sortBy=username
     @GetMapping

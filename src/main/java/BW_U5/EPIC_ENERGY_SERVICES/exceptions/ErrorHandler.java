@@ -1,6 +1,7 @@
 package BW_U5.EPIC_ENERGY_SERVICES.exceptions;
 
 import BW_U5.EPIC_ENERGY_SERVICES.payloads.ErrorsPayload;
+import BW_U5.EPIC_ENERGY_SERVICES.payloads.ErrorsWithListDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,6 +28,19 @@ public class ErrorHandler {
     public ErrorsPayload handleValidationException(ValidationException ex) {
         return new ErrorsPayload(ex.getMessage(), LocalDateTime.now());
     }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED) // 401
+    public ErrorsPayload handleUnauthorized(UnauthorizedException ex) {
+        return new ErrorsPayload(ex.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler(ValException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorsWithListDTO handleValException(ValException ex) {
+        return new ErrorsWithListDTO(ex.getMessage(), LocalDateTime.now(), ex.getErrorsMessages());
+    }
+
 
     @ExceptionHandler(AuthorizationDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN) // 403
