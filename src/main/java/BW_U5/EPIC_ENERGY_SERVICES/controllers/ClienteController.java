@@ -9,6 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/clients")
@@ -45,4 +48,21 @@ public class ClienteController {
 		return clienteService.findById(clients_id);
 	}
 
+	//---------------------------------------- P U T ----------------------------------------------
+
+	//-------------------------------------- D E L E T E ------------------------------------------
+
+	//--------------------------------------- P A T C H -------------------------------------------
+
+	// change logo aziendale -->
+
+	@PatchMapping("/{clients_id}/logo")
+	public Cliente uploadLogo(@RequestParam("logoAziendale") MultipartFile file, @PathVariable long clients_id) {
+		System.out.println(file.getOriginalFilename());
+		try {
+			return clienteService.updateLogoAziendale(clients_id, file);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
