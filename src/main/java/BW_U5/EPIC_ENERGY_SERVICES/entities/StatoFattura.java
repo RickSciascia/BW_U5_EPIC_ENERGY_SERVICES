@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Stato_fattura {
+public class StatoFattura {
 
     @Id
     @GeneratedValue
@@ -23,7 +23,7 @@ public class Stato_fattura {
 
     private String stato;
 
-    public Stato_fattura(String stato) {
+    public StatoFattura(String stato) {
         this.stato = stato;
     }
 }

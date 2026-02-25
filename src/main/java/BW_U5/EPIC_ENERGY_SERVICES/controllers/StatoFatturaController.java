@@ -1,6 +1,6 @@
 package BW_U5.EPIC_ENERGY_SERVICES.controllers;
 
-import BW_U5.EPIC_ENERGY_SERVICES.entities.Stato_fattura;
+import BW_U5.EPIC_ENERGY_SERVICES.entities.StatoFattura;
 import BW_U5.EPIC_ENERGY_SERVICES.payloads.StatoFatturaPayload;
 import BW_U5.EPIC_ENERGY_SERVICES.services.StatoFatturaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class StatoFatturaController {
     //POST
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Stato_fattura salvaFattura(@RequestBody StatoFatturaPayload payload) {
+    public StatoFattura salvaFattura(@RequestBody StatoFatturaPayload payload) {
         return this.statoFatturaService.salvaStatoFattura(payload);
     }
 
@@ -36,13 +36,13 @@ public class StatoFatturaController {
 
     //GET
     @GetMapping("/{idStatoFattura}")
-    public Stato_fattura findById(@PathVariable long idStatoFattura) {
+    public StatoFattura findById(@PathVariable long idStatoFattura) {
         return this.statoFatturaService.findById(idStatoFattura);
     }
 
     //GET
     @GetMapping
-    public List<Stato_fattura> findAll(){
+    public List<StatoFattura> findAll(){
         return this.statoFatturaService.findAll();
     }
 }

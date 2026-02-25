@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/clients")
@@ -37,7 +39,7 @@ public class ClienteController {
 	//------------------------------------- G E T ----------------------------------------------
 	@GetMapping
 	public Page<Cliente> findAllClientes(
-			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "1") int page,
 			@RequestParam(defaultValue = "10") int size,
 			@RequestParam(defaultValue = "ragioneSociale") String orderBY) {
 		return clienteService.findAllClientes(page, size, orderBY);
@@ -48,9 +50,42 @@ public class ClienteController {
 		return clienteService.findById(clients_id);
 	}
 
+	@GetMapping("/clients/fatturato_annuale")
+	public List<Cliente> getByFatturatoAnnuale(@RequestParam double fatturatoAnnuale) {
+		return clienteService.findByFatturatoAnnuale(fatturatoAnnuale);
+	}
+
+	@GetMapping("/clients/ragione_sociale")
+	public List<Cliente> getByRagioneSociale(@RequestParam String ragioneSociale) {
+		return clienteService.findByRagioneSociale(ragioneSociale);
+	}
+
+	@GetMapping("/clients/data_inserimento")
+	public List<Cliente> getByDataInserimento(@RequestParam LocalDate dataInserimento) {
+		return clienteService.findByDataInserimento(dataInserimento);
+	}
+
+	@GetMapping("/clients/data_ultimocontatto")
+	public List<Cliente> getByDataUltimoContatto(@RequestParam LocalDate dataUltimoContatto) {
+		return clienteService.findByDataUltimoContatto(dataUltimoContatto);
+	}
+
+
 	//---------------------------------------- P U T ----------------------------------------------
+	@PutMapping("/{clients_id}")
+	@ResponseStatus(HttpStatus.UPGRADE_REQUIRED)
+	public Cliente updateCliente(@PathVariable("clients_id") long clients_id, ClienteDTO clienteDTO) {
+		return clienteService.updateCliente(clients_id, clienteDTO);
+	}
+
 
 	//-------------------------------------- D E L E T E ------------------------------------------
+
+	@DeleteMapping
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteCliente(@RequestParam long id) {
+		clienteService.deleteCliente(id);
+	}
 
 	//--------------------------------------- P A T C H -------------------------------------------
 

@@ -1,7 +1,6 @@
 package BW_U5.EPIC_ENERGY_SERVICES.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.FutureOrPresent;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,17 +26,17 @@ public class Fattura {
 
   @ManyToOne
   @JoinColumn(name = "id_stato")
-    private Stato_fattura stato_fattura;
+    private StatoFattura statoFattura;
 
   @ManyToOne
   @JoinColumn(name = "id_cliente")
   private Cliente cliente;
 
-    public Fattura(LocalDate data, double importo, int numero, Stato_fattura stato_fattura, Cliente cliente) {
+    public Fattura(LocalDate data, double importo, int numero, StatoFattura statoFattura, Cliente cliente) {
         this.data = data;
         this.importo = importo;
         this.numero = numero;
-        this.stato_fattura = stato_fattura;
+        this.statoFattura = statoFattura;
         this.cliente = cliente;
     }
 

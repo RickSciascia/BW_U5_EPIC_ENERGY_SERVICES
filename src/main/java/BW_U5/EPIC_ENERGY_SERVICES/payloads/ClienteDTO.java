@@ -19,7 +19,7 @@ public record ClienteDTO(
 		LocalDate dataUltimoContatto,
 		@NotNull
 		@Positive
-		long fatturatoAnnuale,
+		double fatturatoAnnuale,
 		@Email(message = "Inserire una pec valida")
 		@NotBlank
 		String pec,

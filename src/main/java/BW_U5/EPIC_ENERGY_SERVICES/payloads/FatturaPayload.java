@@ -1,9 +1,5 @@
 package BW_U5.EPIC_ENERGY_SERVICES.payloads;
 
-import BW_U5.EPIC_ENERGY_SERVICES.entities.Cliente;
-import BW_U5.EPIC_ENERGY_SERVICES.entities.Stato_fattura;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.FutureOrPresent;
 import lombok.Getter;
 
