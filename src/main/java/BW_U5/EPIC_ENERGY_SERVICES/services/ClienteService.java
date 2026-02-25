@@ -4,6 +4,7 @@ import BW_U5.EPIC_ENERGY_SERVICES.entities.Cliente;
 import BW_U5.EPIC_ENERGY_SERVICES.entities.Comune;
 import BW_U5.EPIC_ENERGY_SERVICES.entities.Indirizzo;
 import BW_U5.EPIC_ENERGY_SERVICES.exceptions.NotFoundException;
+import BW_U5.EPIC_ENERGY_SERVICES.exceptions.ValidationException;
 import BW_U5.EPIC_ENERGY_SERVICES.payloads.ClienteDTO;
 import BW_U5.EPIC_ENERGY_SERVICES.repository.ClienteRepository;
 import BW_U5.EPIC_ENERGY_SERVICES.repository.ComuneRepository;
@@ -39,7 +40,7 @@ public class ClienteService {
 
 	public Cliente saveCliente(ClienteDTO clienteDTO) {
 		this.clienteRepository.findByEmail(clienteDTO.email()).ifPresent(cliente -> {
-			throw new IllegalArgumentException("Cliente already exists");
+			throw new ValidationException("Cliente already exists");
 		});
 		Comune comuneIndirizzoLegale = comuneRepository.findById(clienteDTO.indirizzoLegale().idComune()).orElseThrow(() -> new NotFoundException("Comune non trovato"));
 
