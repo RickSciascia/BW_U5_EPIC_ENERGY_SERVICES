@@ -11,10 +11,17 @@ import BW_U5.EPIC_ENERGY_SERVICES.repository.StatoFatturaRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import static BW_U5.EPIC_ENERGY_SERVICES.specifications.FatturaSpecification.*;
 
 
 @Service
@@ -49,8 +56,12 @@ public class FatturaService {
     }
 
     //FIND ALL
-    public List<Fattura> findAll() {
-        return this.fatturaRepository.findAll();
+    public Page<Fattura> findAll(int page, int size, String sortBy) {
+        if (page <= 0) page = 0;
+        if (size < 0 || size > 150) size = 10;
+        if (sortBy == null) sortBy = "name";
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return fatturaRepository.findAll(pageable);
     }
 
     //FIND BY ID
@@ -87,53 +98,40 @@ public class FatturaService {
         return fatturaModificata;
     }
 
-    //FIND BY NUMERO FATTURA
-    public Fattura findByNumero(int numeroFattura){
-        return fatturaRepository.findByNumero(numeroFattura)
-                .orElseThrow(() -> new NotFoundException("La fattura con il numero " + numeroFattura + " non è stata trovata"));
+
+    public List<Fattura> filtriFattura(
+            Integer numeroFattura,
+            Long idCliente,
+            Long idStato,
+            LocalDate data,
+            LocalDate inizio, LocalDate fine,
+            Double importoMin, Double importoMax
+    ){
+        Specification<Fattura> spec = Specification.where((root, query, criteriaBuilder) -> null);
+
+        if (numeroFattura != null){
+            spec = spec.and(hasNumeroFattura(numeroFattura));
+        }
+        if(idCliente != null){
+            spec = spec.and(hasIdCliente(idCliente));
+        }
+        if(idStato != null){
+            spec = spec.and(hasIdStatoFattura(idStato));
+        }
+        if (data != null){
+            spec = spec.and(hasData(data));
+        }
+        if (inizio != null && fine != null){
+           spec = spec.and(hasDataBetween(inizio, fine));
+        }
+        if(importoMin != null && importoMax != null){
+            spec = spec.and(hasImportoBetween(importoMin, importoMax));
+        }
+    return fatturaRepository.findAll(spec);
     }
 
-    //RICERCA PER ID CLIENTE
-    public List<Fattura> findByClienteId(long idCliente){
-        List<Fattura> fatture = fatturaRepository.findByClienteId(idCliente);
-        if (fatture.isEmpty()){
-            throw new NotFoundException("Le fatture con questo id cliente " + idCliente + " non sono state trovate");
-        }
-        return fatture;
-    }
 
-    //RICERCA PER STATO FATTURA
-    public List<Fattura> findByStatoFattura_Id(long idStatoFattura){
-        List<Fattura> fatture = fatturaRepository.findByStatoFattura_Id(idStatoFattura);
-        if (fatture.isEmpty()){
-            throw new NotFoundException("Le fatture con questo id stato " + idStatoFattura + " non sono state trovate");
-        }
-        return fatture;
-    }
 
-    //RICERCA PER DATA
-    public List<Fattura> findByData(LocalDate data){
-        List<Fattura> fatture = fatturaRepository.findByData(data);
-        if (fatture.isEmpty()){
-            throw new NotFoundException("Le fatture con questo data " + data + " non sono state trovate");
-        }
-        return fatture;
-    }
-
-    //RICERCA PER ANNO
-    public List<Fattura> findByDataBetween(LocalDate inizio, LocalDate fine){
-        List<Fattura> fatture = fatturaRepository.findByDataBetween(inizio, fine);
-        if (fatture.isEmpty()){
-            throw new NotFoundException("Le fatture in questo anno " + inizio +" tra " +fine+ " non sono state trovate");
-        }
-        return fatture;
-    }
-
-    //RICERCA PER RANGE DI IMPORTO
-    public List<Fattura> findByImportoBetween(double importoMin, double importoMax){
-        List<Fattura> fatture = fatturaRepository.findByImportoBetween(importoMin, importoMax);
-        if (fatture.isEmpty()){
-            throw new NotFoundException("Le fatture con questo range di importo " + importoMin + importoMax+ " non sono state trovate");
-        }
-        return fatture;}
 }
+
+
