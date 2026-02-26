@@ -15,12 +15,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+
+import static BW_U5.EPIC_ENERGY_SERVICES.specifications.ClienteSpecification.*;
 
 @Service
 public class ClienteService {
@@ -83,7 +86,7 @@ public class ClienteService {
 
 	//------------------------------------- G E T ----------------------------------------------
 
-	// get all cliente
+//	 get all cliente
 
 	public Page<Cliente> findAllClientes(int page, int size, String sortBy) {
 		if (page <= 0) page = 0;
@@ -105,24 +108,41 @@ public class ClienteService {
 		return clienteRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Cliente con email " + email + " non trovato"));
 	}
 
-	// ----------------------------------------- QUERIES -----------------------------------------
+	// ----------------------------------------- QUERIES ------------------------------------------------
 
-	public List<Cliente> findByRagioneSociale(String ragioneSociale) {
-		return clienteRepository.findByRagioneSocialeContainingIgnoreCase(ragioneSociale);
+	public List<Cliente> filtriDinamici(
+			String ragioneSociale,
+			Double fatturato,
+			LocalDate dataInserimentoStart,
+			LocalDate dataInserimentoEnd,
+			LocalDate ultimoContattoStart,
+			LocalDate ultimoContattoEnd,
+			String cognomeContatto
+	) {
+
+		Specification<Cliente> spec = Specification.where((root, query, criteriaBuilder) -> null);
+
+		if (ragioneSociale != null) {
+			spec = spec.and(hasRagioneSociale(ragioneSociale));
+		}
+
+		if (fatturato != null) {
+			spec = spec.and(hasFatturatoMaggioreDi(fatturato));
+		}
+
+		if (dataInserimentoStart != null && dataInserimentoEnd != null) {
+			spec = spec.and(hasDataInserimentoBetween(dataInserimentoStart, dataInserimentoEnd));
+		}
+
+		if (ultimoContattoStart != null && ultimoContattoEnd != null) {
+			spec = spec.and(hasDataUltimoContattoBetween(ultimoContattoStart, ultimoContattoEnd));
+		}
+		if (cognomeContatto != null) {
+			spec = spec.and(hasCognomeContatto(cognomeContatto));
+		}
+
+		return clienteRepository.findAll(spec);
 	}
-
-	public List<Cliente> findByFatturatoAnnuale(double fatturatoAnnuale) {
-		return clienteRepository.findByFatturatoAnnualeGreaterThan(fatturatoAnnuale);
-	}
-
-	public List<Cliente> findByDataInserimento(LocalDate dataInserimento, LocalDate dataInserimento2) {
-		return clienteRepository.findByDataInserimentoBetween(dataInserimento, dataInserimento);
-	}
-
-	public List<Cliente> findByDataUltimoContatto(LocalDate dataUltimoContatto, LocalDate dataUltimoContatto2) {
-		return clienteRepository.findByDataUltimoContattoBetween(dataUltimoContatto, dataUltimoContatto2);
-	}
-
 
 	//------------------------------------- P U T ----------------------------------------------
 
