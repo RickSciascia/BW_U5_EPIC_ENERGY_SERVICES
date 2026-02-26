@@ -85,8 +85,8 @@ public class ClienteService {
 
 	// get all cliente
 
-	public Page<Cliente> findAllClientes(int size, int page, String sortBy) {
-		if (page <= 0) page = 1;
+	public Page<Cliente> findAllClientes(int page, int size, String sortBy) {
+		if (page <= 0) page = 0;
 		if (size < 0 || size > 150) size = 10;
 		if (sortBy == null) sortBy = "name";
 		Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
@@ -115,12 +115,12 @@ public class ClienteService {
 		return clienteRepository.findByFatturatoAnnualeGreaterThan(fatturatoAnnuale);
 	}
 
-	public List<Cliente> findByDataInserimento(LocalDate dataInserimento) {
-		return clienteRepository.findByDataInserimento(dataInserimento);
+	public List<Cliente> findByDataInserimento(LocalDate dataInserimento, LocalDate dataInserimento2) {
+		return clienteRepository.findByDataInserimentoBetween(dataInserimento, dataInserimento);
 	}
 
-	public List<Cliente> findByDataUltimoContatto(LocalDate dataUltimoContatto) {
-		return clienteRepository.findByDataUltimoContatto(dataUltimoContatto);
+	public List<Cliente> findByDataUltimoContatto(LocalDate dataUltimoContatto, LocalDate dataUltimoContatto2) {
+		return clienteRepository.findByDataUltimoContattoBetween(dataUltimoContatto, dataUltimoContatto2);
 	}
 
 

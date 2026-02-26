@@ -2,6 +2,7 @@ package BW_U5.EPIC_ENERGY_SERVICES.controllers;
 
 
 import BW_U5.EPIC_ENERGY_SERVICES.entities.Cliente;
+import BW_U5.EPIC_ENERGY_SERVICES.exceptions.NotFoundException;
 import BW_U5.EPIC_ENERGY_SERVICES.payloads.ClienteDTO;
 import BW_U5.EPIC_ENERGY_SERVICES.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,38 +37,54 @@ public class ClienteController {
 	}
 
 
-	//------------------------------------- G E T ----------------------------------------------
+	//------------------------------------- G E T -----------------------------------------------
 	@GetMapping
 	public Page<Cliente> findAllClientes(
-			@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size,
-			@RequestParam(defaultValue = "ragioneSociale") String orderBY) {
-		return clienteService.findAllClientes(page, size, orderBY);
+			@RequestParam(defaultValue = "ragioneSociale") String orderBy) {
+		return clienteService.findAllClientes(page, size, orderBy);
 	}
 
 	@GetMapping("/{clients_id}")
-	public Cliente findClienteById(@PathVariable("clients_id") long clients_id) {
+	public Cliente findClienteById(@PathVariable long clients_id) {
 		return clienteService.findById(clients_id);
 	}
 
-	@GetMapping("/clients/fatturato_annuale")
-	public List<Cliente> getByFatturatoAnnuale(@RequestParam double fatturatoAnnuale) {
-		return clienteService.findByFatturatoAnnuale(fatturatoAnnuale);
+	@GetMapping("/fatturato_annuale/{fatturatoAnnuale}")
+	public List<Cliente> getByFatturatoAnnuale(@PathVariable double fatturatoAnnuale) {
+		List<Cliente> cliente = clienteService.findByFatturatoAnnuale(fatturatoAnnuale);
+		if (cliente.isEmpty()) {
+			throw new NotFoundException("Cliente non trovato");
+		}
+		return cliente;
 	}
 
-	@GetMapping("/clients/ragione_sociale")
-	public List<Cliente> getByRagioneSociale(@RequestParam String ragioneSociale) {
-		return clienteService.findByRagioneSociale(ragioneSociale);
+	@GetMapping("/ragione_sociale/{ragioneSociale}")
+	public List<Cliente> getByRagioneSociale(@PathVariable String ragioneSociale) {
+		List<Cliente> cliente = clienteService.findByRagioneSociale(ragioneSociale);
+		if (cliente.isEmpty()) {
+			throw new NotFoundException("Cliente non trovato");
+		}
+		return cliente;
 	}
 
-	@GetMapping("/clients/data_inserimento")
-	public List<Cliente> getByDataInserimento(@RequestParam LocalDate dataInserimento) {
-		return clienteService.findByDataInserimento(dataInserimento);
+	@GetMapping("/clients{dataInserimento}/{dataInserimento2}")
+	public List<Cliente> getByDataInserimento(@PathVariable LocalDate dataInserimento, @PathVariable LocalDate dataInserimento2) {
+		List<Cliente> cliente = clienteService.findByDataInserimento(dataInserimento, dataInserimento2);
+		if (cliente.isEmpty()) {
+			throw new NotFoundException("Cliente non trovato");
+		}
+		return cliente;
 	}
 
-	@GetMapping("/clients/data_ultimocontatto")
-	public List<Cliente> getByDataUltimoContatto(@RequestParam LocalDate dataUltimoContatto) {
-		return clienteService.findByDataUltimoContatto(dataUltimoContatto);
+	@GetMapping("/data_ultimocontatto/{dataUltimoContatto}/{dataUltimoContatto2}")
+	public List<Cliente> getByDataUltimoContatto(@PathVariable LocalDate dataUltimoContatto, @PathVariable LocalDate dataUltimoContatto2) {
+		List<Cliente> cliente = clienteService.findByDataUltimoContatto(dataUltimoContatto, dataUltimoContatto2);
+		if (cliente.isEmpty()) {
+			throw new NotFoundException("Cliente non trovato");
+		}
+		return cliente;
 	}
 
 
@@ -87,7 +104,7 @@ public class ClienteController {
 		clienteService.deleteCliente(id);
 	}
 
-	//--------------------------------------- P A T C H -------------------------------------------
+	//--------------------------------------- P A T C H --------------------------------------------
 
 	// change logo aziendale -->
 

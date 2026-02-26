@@ -22,10 +22,10 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 	List<Cliente> findByFatturatoAnnualeGreaterThan(double fatturatoAnnuale);
 
 	// Ricerca per data inserimento
-	List<Cliente> findByDataInserimento(LocalDate dataInserimento);
+	List<Cliente> findByDataInserimentoBetween(LocalDate dataInserimento, LocalDate dataInserimento2);
 
 	// Ricerca per ultimo contatto
-	List<Cliente> findByDataUltimoContatto(LocalDate dataUltimoContatto);
+	List<Cliente> findByDataUltimoContattoBetween(LocalDate inizio, LocalDate fine);
 
 	// Ricerca per parte del nome
 	List<Cliente> findByRagioneSocialeContainingIgnoreCase(String ragioneSociale);
