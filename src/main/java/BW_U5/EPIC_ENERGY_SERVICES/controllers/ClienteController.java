@@ -37,13 +37,13 @@ public class ClienteController {
 	}
 
 
-	//------------------------------------- G E T ----------------------------------------------
+	//------------------------------------- G E T -----------------------------------------------
 	@GetMapping
 	public Page<Cliente> findAllClientes(
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size,
-			@RequestParam(defaultValue = "ragioneSociale") String orderBY) {
-		return clienteService.findAllClientes(page, size, orderBY);
+			@RequestParam(defaultValue = "ragioneSociale") String orderBy) {
+		return clienteService.findAllClientes(page, size, orderBy);
 	}
 
 	@GetMapping("/{clients_id}")
@@ -104,7 +104,7 @@ public class ClienteController {
 		clienteService.deleteCliente(id);
 	}
 
-	//--------------------------------------- P A T C H -------------------------------------------
+	//--------------------------------------- P A T C H --------------------------------------------
 
 	// change logo aziendale -->
 
