@@ -17,6 +17,7 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +37,18 @@ public class ImporterRunner implements CommandLineRunner {
     private UtenteRepository utenteRepository;
     @Autowired
     private UtenteService utenteService;
+    @Value("${admin.username}")
+    private String adminUsername;
+    @Value("${admin.email}")
+    private String adminEmail;
+    @Value("${admin.password}")
+    private String adminPsw;
+    @Value("${admin.nome}")
+    private String adminNome;
+    @Value("${admin.cognome}")
+    private String adminCognome;
+    @Value("${admin.avatar}")
+    private String adminAvatar;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -46,7 +59,7 @@ public class ImporterRunner implements CommandLineRunner {
             ruoloService.saveNuovoRuolo(ADMIN);
         }
         if(utenteRepository.findByRuoli_Ruolo("ADMIN").isEmpty()) {
-            UtenteDTO utenteAdmin = new UtenteDTO("ADMIN","admin@admin.it","Admin1234","AMMINISTRATORE","DI SISTEMA","https://placecats.com/300/300");
+            UtenteDTO utenteAdmin = new UtenteDTO(adminUsername,adminEmail,adminPsw,adminNome,adminCognome,adminAvatar);
             utenteService.saveAdmin(utenteAdmin);
         }
 
