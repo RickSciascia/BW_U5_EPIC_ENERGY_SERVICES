@@ -1,5 +1,6 @@
 package BW_U5.EPIC_ENERGY_SERVICES.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +16,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @ToString
+@JsonIgnoreProperties({"password","accountNonExpired","accountNonLocked","credentialsNonExpired","enabled"})
 public class Utente implements UserDetails {
 
     @Id
@@ -52,7 +54,7 @@ public class Utente implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.ruoli.toString()));
+        return this.ruoli.stream().map(ruolo -> new SimpleGrantedAuthority(ruolo.getRuolo())).toList();
     }
 
     @Override

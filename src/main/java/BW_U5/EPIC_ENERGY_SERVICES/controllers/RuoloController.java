@@ -5,6 +5,7 @@ import BW_U5.EPIC_ENERGY_SERVICES.exceptions.ValException;
 import BW_U5.EPIC_ENERGY_SERVICES.payloads.RuoloDTO;
 import BW_U5.EPIC_ENERGY_SERVICES.services.RuoloService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ public class RuoloController {
     //    POST
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Ruolo salvaRuolo(@RequestBody @Validated RuoloDTO payload, BindingResult validationResult) {
         if(validationResult.hasErrors()) {
             List<String> listaErrori = validationResult.getFieldErrors()
@@ -35,17 +37,20 @@ public class RuoloController {
     }
 //    GET
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('UTENTE','ADMIN')")
     public List<Ruolo>getAllRuoli() {
         return this.ruoloService.findAllRuoli();
     }
 //    GET specifica
     @GetMapping("/{idRuolo}")
+    @PreAuthorize("hasAnyAuthority('UTENTE','ADMIN')")
     public Ruolo getRuoloById(@PathVariable long idRuolo) {
         return this.ruoloService.findRuoloById(idRuolo);
     }
 
 //    PUT
     @PutMapping("/{idRuolo}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Ruolo editRuolo(@RequestBody @Validated RuoloDTO payload, BindingResult valResult, @PathVariable long idRuolo) {
         if(valResult.hasErrors()) {
             List<String> listaErrori = valResult.getFieldErrors()
@@ -59,6 +64,7 @@ public class RuoloController {
 //    DELETE
     @DeleteMapping("/{idRuolo}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteRuolo(@PathVariable long idRuolo) {
         this.ruoloService.findRuoloByIdAndDelete(idRuolo);
     }

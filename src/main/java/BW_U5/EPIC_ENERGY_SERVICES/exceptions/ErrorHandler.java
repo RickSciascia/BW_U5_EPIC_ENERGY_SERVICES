@@ -71,11 +71,4 @@ public class ErrorHandler {
         });
         return errors;
     }
-
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 500 Internal Server Error
-    public ErrorsPayload handleGenericError(Exception ex) {
-        ex.printStackTrace();
-        return new ErrorsPayload("C'è stato un problema con il server! Siamo al lavoro per sistemarlo!", LocalDateTime.now());
-    }
 }

@@ -29,6 +29,7 @@ public class FatturaController {
     //POST
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Fattura salvaFattura(@RequestBody FatturaPayload payload) {
         return this.fatturaService.salvaFattura(payload);
     }
@@ -36,6 +37,7 @@ public class FatturaController {
     //DELETE
     @DeleteMapping("/{idFattura}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void findByIdAndDelete(@PathVariable long idFattura) {
         this.fatturaService.findByIdAndDelete(idFattura);
     }
@@ -43,54 +45,63 @@ public class FatturaController {
 
     //GET
     @GetMapping("/id/{idFattura}")
+    @PreAuthorize("hasAnyAuthority('UTENTE','ADMIN')")
     public Fattura findById(@PathVariable long idFattura) {
         return this.fatturaService.findById(idFattura);
     }
 
     //GET
     @GetMapping("/numero/{numero}")
+    @PreAuthorize("hasAnyAuthority('UTENTE','ADMIN')")
     public Fattura findByNumero(@PathVariable int numero) {
         return this.fatturaService.findByNumero(numero);
     }
 
     //GET
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('UTENTE','ADMIN')")
     public List<Fattura> findAll(){
         return this.fatturaService.findAll();
     }
 
     //PUT
     @PutMapping("/{idFattura}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Fattura findByIdAndUpdate(@PathVariable long idFattura, @RequestBody FatturaPayload payload) {
         return this.fatturaService.findByIdAndUpdate(idFattura, payload);
     }
 
     //RICERCA PER ID CLIENTE
     @GetMapping("/cliente/{idCliente}")
+    @PreAuthorize("hasAnyAuthority('UTENTE','ADMIN')")
     public List<Fattura> findByClienteId(@PathVariable long idCliente){
         return this.fatturaService.findByClienteId(idCliente);
     }
 
     //RICERCA PER STATO FATTURA
     @GetMapping("/stato/{idStatoFattura}")
+    @PreAuthorize("hasAnyAuthority('UTENTE','ADMIN')")
     public List<Fattura> findByStatoFattura_Id(@PathVariable long idStatoFattura){
         return this.fatturaService.findByStatoFattura_Id(idStatoFattura);
     }
 
     //RICERCA PER DATA
     @GetMapping("data/{data}")
+    @PreAuthorize("hasAnyAuthority('UTENTE','ADMIN')")
     public List<Fattura> findByData(@PathVariable LocalDate data ){
         return this.fatturaService.findByData(data);
     }
 
     //RICERCA PER ANNO
     @GetMapping("anno/{inizio}/{fine}")
+    @PreAuthorize("hasAnyAuthority('UTENTE','ADMIN')")
     public List<Fattura> findByDataBetween(@PathVariable LocalDate inizio,@PathVariable LocalDate fine ){
         return this.fatturaService.findByDataBetween(inizio, fine);
     }
 
     //RICERCA PER RANGE DI IMPORTO
     @GetMapping("importo/{importoMin}/{importoMax}")
+    @PreAuthorize("hasAnyAuthority('UTENTE','ADMIN')")
     public List<Fattura> findByImportoBetween(@PathVariable double importoMin, @PathVariable double importoMax ){
         return this.fatturaService.findByImportoBetween(importoMin, importoMax);
     }

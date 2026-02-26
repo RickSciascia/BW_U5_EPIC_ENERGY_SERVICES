@@ -6,6 +6,7 @@ import BW_U5.EPIC_ENERGY_SERVICES.services.UtenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,6 +23,7 @@ public class UtenteController {
     // GET ALL - Lista utenti
     // GET http://localhost:3001/utenti?page=0&size=10&sortBy=username
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('UTENTE','ADMIN')")
     public Page<Utente> getAllUtenti(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -33,6 +35,7 @@ public class UtenteController {
     //  GET BY ID
     // GET http://localhost:3001/utenti/5
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('UTENTE','ADMIN')")
     public Utente getUtenteById(@PathVariable long id) {
         return utenteService.findById(id);
     }
@@ -41,6 +44,7 @@ public class UtenteController {
     // DELETE http://localhost:3001/utenti/5
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteUtente(@PathVariable long id) {
         utenteService.findByIdAndDelete(id);
     }
