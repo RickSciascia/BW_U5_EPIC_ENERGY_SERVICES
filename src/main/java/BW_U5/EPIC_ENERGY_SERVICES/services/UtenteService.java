@@ -6,147 +6,175 @@ import BW_U5.EPIC_ENERGY_SERVICES.exceptions.NotFoundException;
 import BW_U5.EPIC_ENERGY_SERVICES.exceptions.ValidationException;
 import BW_U5.EPIC_ENERGY_SERVICES.payloads.UtenteDTO;
 import BW_U5.EPIC_ENERGY_SERVICES.repository.UtenteRepository;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.password.PasswordEncoder; // Assicurati di avere questa dipendenza
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
 public class UtenteService {
 
-    private final UtenteRepository utenteRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final EmailSender emailSender;
-    private final RuoloService ruoloService;
+	private final UtenteRepository utenteRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final EmailSender emailSender;
+	private final RuoloService ruoloService;
+	private final Cloudinary cloudinary;
 
 
-    @Autowired
-    public UtenteService(UtenteRepository utenteRepository, PasswordEncoder passwordEncoder, EmailSender emailSender, RuoloService ruoloService) {
-        this.utenteRepository = utenteRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.emailSender = emailSender;
-        this.ruoloService = ruoloService;
-    }
+	@Autowired
+	public UtenteService(UtenteRepository utenteRepository, PasswordEncoder passwordEncoder, EmailSender emailSender, RuoloService ruoloService, Cloudinary cloudinary) {
+		this.utenteRepository = utenteRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.emailSender = emailSender;
+		this.ruoloService = ruoloService;
+		this.cloudinary = cloudinary;
+	}
 
-    //POST
+	//POST
 
-    public Utente saveUtente(UtenteDTO utenteDTO) {
-        // 1 Controllo unicita email
-        this.utenteRepository.findByEmail(utenteDTO.email()).ifPresent(utente -> {
-            throw new ValidationException("L'email " + utenteDTO.email() + " è già in uso.");
-        });
+	public Utente saveUtente(UtenteDTO utenteDTO) {
+		// 1 Controllo unicita email
+		this.utenteRepository.findByEmail(utenteDTO.email()).ifPresent(utente -> {
+			throw new ValidationException("L'email " + utenteDTO.email() + " è già in uso.");
+		});
 
-        // 2 Controllo unicita username
-        this.utenteRepository.findByUsername(utenteDTO.username()).ifPresent(utente -> {
-            throw new ValidationException("Lo username " + utenteDTO.username() + " è già in uso.");
-        });
+		// 2 Controllo unicita username
+		this.utenteRepository.findByUsername(utenteDTO.username()).ifPresent(utente -> {
+			throw new ValidationException("Lo username " + utenteDTO.username() + " è già in uso.");
+		});
 
-        // 3 Mapping DTO,entity con codifica password
-        Utente utente = new Utente();
-        utente.setUsername(utenteDTO.username());
-        utente.setEmail(utenteDTO.email());
-        utente.setNome(utenteDTO.nome());
-        utente.setCognome(utenteDTO.cognome());
-        Ruolo ruoloUtente = ruoloService.findRuoloById(1);
-        utente.setRuoli(List.of(ruoloUtente));
+		// 3 Mapping DTO,entity con codifica password
+		Utente utente = new Utente();
+		utente.setUsername(utenteDTO.username());
+		utente.setEmail(utenteDTO.email());
+		utente.setNome(utenteDTO.nome());
+		utente.setCognome(utenteDTO.cognome());
+		Ruolo ruoloUtente = ruoloService.findRuoloById(1);
+		utente.setRuoli(List.of(ruoloUtente));
 
-        // per la password
-        utente.setPassword(passwordEncoder.encode(utenteDTO.password()));
-
-
-        // 4 salvataggio nel db
-
-        Utente savedUtente = utenteRepository.save(utente);
-
-        // 5 invio dell email di benvenuto
+		// per la password
+		utente.setPassword(passwordEncoder.encode(utenteDTO.password()));
 
 
-        try {
-            emailSender.sendWelcomeEmail(savedUtente);
-        } catch (Exception e) {
-            System.out.println("Errore invio email: " + e.getMessage());
-        }
+		// 4 salvataggio nel db
 
-        return savedUtente;
-    }
+		Utente savedUtente = utenteRepository.save(utente);
 
-    //POST
-
-    public Utente saveAdmin(UtenteDTO utenteDTO) {
-        // 1 Controllo unicita email
-        this.utenteRepository.findByEmail(utenteDTO.email()).ifPresent(utente -> {
-            throw new ValidationException("L'email " + utenteDTO.email() + " è già in uso.");
-        });
-
-        // 2 Controllo unicita username
-        this.utenteRepository.findByUsername(utenteDTO.username()).ifPresent(utente -> {
-            throw new ValidationException("Lo username " + utenteDTO.username() + " è già in uso.");
-        });
-
-        // 3 Mapping DTO,entity con codifica password
-        Utente utente = new Utente();
-        utente.setUsername(utenteDTO.username());
-        utente.setEmail(utenteDTO.email());
-        utente.setNome(utenteDTO.nome());
-        utente.setCognome(utenteDTO.cognome());
-        Ruolo ruoloAdmin = ruoloService.findRuoloById(2);
-        utente.setRuoli(List.of(ruoloAdmin));
-
-        // per la password
-        utente.setPassword(passwordEncoder.encode(utenteDTO.password()));
+		// 5 invio dell email di benvenuto
 
 
-        // 4 salvataggio nel db
+		try {
+			emailSender.sendWelcomeEmail(savedUtente);
+		} catch (Exception e) {
+			System.out.println("Errore invio email: " + e.getMessage());
+		}
 
-        Utente savedUtente = utenteRepository.save(utente);
+		return savedUtente;
+	}
 
-        // 5 invio dell email di benvenuto
+	//POST
+
+	public Utente saveAdmin(UtenteDTO utenteDTO) {
+		// 1 Controllo unicita email
+		this.utenteRepository.findByEmail(utenteDTO.email()).ifPresent(utente -> {
+			throw new ValidationException("L'email " + utenteDTO.email() + " è già in uso.");
+		});
+
+		// 2 Controllo unicita username
+		this.utenteRepository.findByUsername(utenteDTO.username()).ifPresent(utente -> {
+			throw new ValidationException("Lo username " + utenteDTO.username() + " è già in uso.");
+		});
+
+		// 3 Mapping DTO,entity con codifica password
+		Utente utente = new Utente();
+		utente.setUsername(utenteDTO.username());
+		utente.setEmail(utenteDTO.email());
+		utente.setNome(utenteDTO.nome());
+		utente.setCognome(utenteDTO.cognome());
+		Ruolo ruoloAdmin = ruoloService.findRuoloById(2);
+		utente.setRuoli(List.of(ruoloAdmin));
+
+		// per la password
+		utente.setPassword(passwordEncoder.encode(utenteDTO.password()));
 
 
-        try {
-            emailSender.sendWelcomeEmail(savedUtente);
-        } catch (Exception e) {
-            System.out.println("Errore invio email: " + e.getMessage());
-        }
+		// 4 salvataggio nel db
 
-        return savedUtente;
-    }
+		Utente savedUtente = utenteRepository.save(utente);
 
-    //Get
+		// 5 invio dell email di benvenuto
 
-    public Page<Utente> findAllUtenti(int size, int page, String sortBy) {
-        if (page < 0) page = 0;
-        if (size < 0 || size > 50) size = 10;
-        if (sortBy == null) sortBy = "id";
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return utenteRepository.findAll(pageable);
-    }
+		try {
+			emailSender.sendWelcomeEmail(savedUtente);
+		} catch (Exception e) {
+			System.out.println("Errore invio email: " + e.getMessage());
+		}
 
-    public Utente findById(long id) {
-        return utenteRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Utente con id " + id + " non trovato"));
-    }
+		return savedUtente;
+	}
 
-    public Utente findByEmail(String email) {
-        return utenteRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException("Utente con email " + email + " non trovato"));
-    }
+	//Get
 
-    public Utente findByUsername(String username) {
-        return utenteRepository.findByUsername(username)
-                .orElseThrow(() -> new NotFoundException("Utente con username " + username + " non trovato"));
-    }
+	public Page<Utente> findAllUtenti(int size, int page, String sortBy) {
+		if (page < 0) page = 0;
+		if (size < 0 || size > 50) size = 10;
+		if (sortBy == null) sortBy = "id";
 
-    //per eliminare
+		Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+		return utenteRepository.findAll(pageable);
+	}
 
-    public void findByIdAndDelete(long id) {
-        Utente found = this.findById(id);
-        this.utenteRepository.delete(found);
-    }
+	public Utente findById(long id) {
+		return utenteRepository.findById(id)
+				.orElseThrow(() -> new NotFoundException("Utente con id " + id + " non trovato"));
+	}
+
+	public Utente findByEmail(String email) {
+		return utenteRepository.findByEmail(email)
+				.orElseThrow(() -> new NotFoundException("Utente con email " + email + " non trovato"));
+	}
+
+	public Utente findByUsername(String username) {
+		return utenteRepository.findByUsername(username)
+				.orElseThrow(() -> new NotFoundException("Utente con username " + username + " non trovato"));
+	}
+
+	//per eliminare
+
+	public void findByIdAndDelete(long id) {
+		Utente found = this.findById(id);
+		this.utenteRepository.delete(found);
+	}
+
+	// PATCH
+
+	public Utente updateAvatar(long id, MultipartFile file) throws IOException {
+		Utente utente = this.findById(id);
+		String avatarUrl = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+		utente.setAvatar(avatarUrl);
+		return utenteRepository.save(utente);
+	}
+
+	// PUT
+
+	public Utente updateUtente(long id, UtenteDTO utenteDTO) {
+
+		Utente utente = this.findById(id);
+
+		utente.setUsername(utenteDTO.username());
+		utente.setEmail(utenteDTO.email());
+		utente.setNome(utenteDTO.nome());
+		utente.setCognome(utenteDTO.cognome());
+		return utenteRepository.save(utente);
+	}
 }

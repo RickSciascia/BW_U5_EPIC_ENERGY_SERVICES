@@ -81,47 +81,6 @@ public class ClienteController {
 		);
 	}
 
-//	@GetMapping("/fatturato_annuale/{fatturatoAnnuale}")
-//    @PreAuthorize("hasAnyAuthority('UTENTE','ADMIN')")
-//	public List<Cliente> getByFatturatoAnnuale(@PathVariable double fatturatoAnnuale) {
-//		List<Cliente> cliente = clienteService.findByFatturatoAnnuale(fatturatoAnnuale);
-//		if (cliente.isEmpty()) {
-//			throw new NotFoundException("Cliente non trovato");
-//		}
-//		return cliente;
-//	}
-//
-//	@GetMapping("/ragione_sociale/{ragioneSociale}")
-//    @PreAuthorize("hasAnyAuthority('UTENTE','ADMIN')")
-//	public List<Cliente> getByRagioneSociale(@PathVariable String ragioneSociale) {
-//		List<Cliente> cliente = clienteService.findByRagioneSociale(ragioneSociale);
-//		if (cliente.isEmpty()) {
-//			throw new NotFoundException("Cliente non trovato");
-//		}
-//		return cliente;
-//	}
-//
-//	@GetMapping("/clients{dataInserimento}/{dataInserimento2}")
-//    @PreAuthorize("hasAnyAuthority('UTENTE','ADMIN')")
-//	public List<Cliente> getByDataInserimento(@PathVariable LocalDate dataInserimento, @PathVariable LocalDate dataInserimento2) {
-//		List<Cliente> cliente = clienteService.findByDataInserimento(dataInserimento, dataInserimento2);
-//		if (cliente.isEmpty()) {
-//			throw new NotFoundException("Cliente non trovato");
-//		}
-//		return cliente;
-//	}
-//
-//	@GetMapping("/data_ultimocontatto/{dataUltimoContatto}/{dataUltimoContatto2}")
-//    @PreAuthorize("hasAnyAuthority('UTENTE','ADMIN')")
-//	public List<Cliente> getByDataUltimoContatto(@PathVariable LocalDate dataUltimoContatto, @PathVariable LocalDate dataUltimoContatto2) {
-//		List<Cliente> cliente = clienteService.findByDataUltimoContatto(dataUltimoContatto, dataUltimoContatto2);
-//		if (cliente.isEmpty()) {
-//			throw new NotFoundException("Cliente non trovato");
-//		}
-//		return cliente;
-//	}
-
-
 	//---------------------------------------- P U T ----------------------------------------------
 	@PutMapping("/{clients_id}")
 	@PreAuthorize("hasAuthority('ADMIN')")
