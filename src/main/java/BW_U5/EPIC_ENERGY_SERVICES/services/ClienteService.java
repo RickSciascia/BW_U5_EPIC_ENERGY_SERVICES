@@ -8,6 +8,7 @@ import BW_U5.EPIC_ENERGY_SERVICES.exceptions.ValidationException;
 import BW_U5.EPIC_ENERGY_SERVICES.payloads.ClienteDTO;
 import BW_U5.EPIC_ENERGY_SERVICES.repository.ClienteRepository;
 import BW_U5.EPIC_ENERGY_SERVICES.repository.ComuneRepository;
+import BW_U5.EPIC_ENERGY_SERVICES.repository.FatturaRepository;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,14 @@ public class ClienteService {
 	private final ClienteRepository clienteRepository;
 	private final Cloudinary cloudinary;
 	private final ComuneRepository comuneRepository;
+	private final FatturaRepository fatturaRepository;
 
 	@Autowired
-	public ClienteService(ClienteRepository clienteRepository, Cloudinary cloudinary, ComuneRepository comuneRepository) {
+	public ClienteService(ClienteRepository clienteRepository, Cloudinary cloudinary, ComuneRepository comuneRepository, FatturaRepository fatturaRepository) {
 		this.clienteRepository = clienteRepository;
 		this.cloudinary = cloudinary;
 		this.comuneRepository = comuneRepository;
+		this.fatturaRepository = fatturaRepository;
 	}
 
 	//------------------------------------- P O S T ----------------------------------------------
@@ -190,8 +193,13 @@ public class ClienteService {
 
 	// delete cliente
 
-	public void deleteCliente(long id) {
-		clienteRepository.deleteById(id);
+	public void deleteCliente(Long id) {
+		Cliente cliente = this.findById(id);
+		if (fatturaRepository.existsById(id)) {
+			System.out.println("id cliente " + cliente.getId());
+		} else throw new ValidationException("Attenzione! ci sono fatture associate a questo utente ");
+		clienteRepository.delete(cliente);
+
 	}
 
 	//------------------------------------ P A T C H ----------------------------------------------

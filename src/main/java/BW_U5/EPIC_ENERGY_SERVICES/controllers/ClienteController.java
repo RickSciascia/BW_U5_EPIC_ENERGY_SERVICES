@@ -95,7 +95,7 @@ public class ClienteController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public void deleteCliente(@PathVariable("clients_id") long clients_id) {
-		clienteService.deleteCliente(clients_id);
+		this.clienteService.deleteCliente(clients_id);
 	}
 
 	//--------------------------------------- P A T C H --------------------------------------------
