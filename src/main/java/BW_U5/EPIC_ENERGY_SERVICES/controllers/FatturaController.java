@@ -46,7 +46,7 @@ public class FatturaController {
 
 
     //GET
-    @GetMapping("/id/{idFattura}")
+    @GetMapping("/{idFattura}")
     @PreAuthorize("hasAnyAuthority('UTENTE','ADMIN')")
     public Fattura findById(@PathVariable long idFattura) {
         return this.fatturaService.findById(idFattura);
