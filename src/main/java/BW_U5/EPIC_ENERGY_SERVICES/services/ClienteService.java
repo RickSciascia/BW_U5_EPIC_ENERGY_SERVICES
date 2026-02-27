@@ -149,39 +149,40 @@ public class ClienteService {
 	// modify cliente
 
 	public Cliente updateCliente(long id, ClienteDTO clienteDTO) {
+
 		Cliente cliente = this.findById(id);
 
-		Comune comuneIndirizzoCommerciale = comuneRepository.findById(clienteDTO.indirizzoCommerciale().idComune()).orElseThrow(() -> new NotFoundException("Comune non trovato"));
-		Comune comuneIndirizzoLegale = comuneRepository.findById(clienteDTO.indirizzoLegale().idComune()).orElseThrow(() -> new NotFoundException("Comune non trovato"));
+		if (clienteDTO.indirizzoCommerciale() != null) {
+			Comune comuneIndirizzoCommerciale = comuneRepository.findById(clienteDTO.indirizzoCommerciale().idComune()).orElseThrow(() -> new NotFoundException("Comune non trovato"));
 
-		Indirizzo indirizzoCommerciale = new Indirizzo(
-				clienteDTO.indirizzoCommerciale().via(),
-				clienteDTO.indirizzoCommerciale().civico(),
-				clienteDTO.indirizzoCommerciale().cap(),
-				comuneIndirizzoCommerciale);
+			Indirizzo indirizzoCommerciale = cliente.getIndirizzoCommerciale();
+			indirizzoCommerciale.setVia(clienteDTO.indirizzoCommerciale().via());
+			indirizzoCommerciale.setCivico(clienteDTO.indirizzoCommerciale().civico());
+			indirizzoCommerciale.setCap(clienteDTO.indirizzoCommerciale().cap());
+			indirizzoCommerciale.setComune(comuneIndirizzoCommerciale);
 
-		Indirizzo indirizzoLegale = new Indirizzo(
-				clienteDTO.indirizzoLegale().via(),
-				clienteDTO.indirizzoLegale().civico(),
-				clienteDTO.indirizzoLegale().cap(),
-				comuneIndirizzoLegale);
+			if (clienteDTO.indirizzoLegale() != null) {
+				Comune comuneIndirizzoLegale = comuneRepository.findById(clienteDTO.indirizzoLegale().idComune()).orElseThrow(() -> new NotFoundException("Comune non trovato"));
+				Indirizzo indirizzoLegale = cliente.getIndirizzoLegale();
+				indirizzoLegale.setVia(clienteDTO.indirizzoLegale().via());
+				indirizzoLegale.setCivico(clienteDTO.indirizzoLegale().civico());
+				indirizzoLegale.setCap(clienteDTO.indirizzoLegale().cap());
+				indirizzoLegale.setComune(comuneIndirizzoLegale);
+			}
 
-		cliente.setRagioneSociale(clienteDTO.ragioneSociale());
-		cliente.setEmail(clienteDTO.email());
-		cliente.setDataInserimento(clienteDTO.dataInserimento());
-		cliente.setDataUltimoContatto(clienteDTO.dataUltimoContatto());
-		cliente.setPec(clienteDTO.pec());
-		cliente.setNumeroDiTelefono(clienteDTO.numeroDiTelefono());
-		cliente.setEmailDiContatto(clienteDTO.emailDiContatto());
-		cliente.setNomeContatto(clienteDTO.nomeContatto());
-		cliente.setCognomeContatto(clienteDTO.cognomeContatto());
-		cliente.setTelefonoDiContatto(clienteDTO.telefonoDiContatto());
-		cliente.setLogoAziendale(clienteDTO.logoAziendale());
-		cliente.setTipoCliente(clienteDTO.tipoCliente());
-		cliente.setIndirizzoCommerciale(indirizzoCommerciale);
-		cliente.setIndirizzoLegale(indirizzoLegale);
-
-
+			cliente.setRagioneSociale(clienteDTO.ragioneSociale());
+			cliente.setEmail(clienteDTO.email());
+			cliente.setDataInserimento(clienteDTO.dataInserimento());
+			cliente.setDataUltimoContatto(clienteDTO.dataUltimoContatto());
+			cliente.setPec(clienteDTO.pec());
+			cliente.setNumeroDiTelefono(clienteDTO.numeroDiTelefono());
+			cliente.setEmailDiContatto(clienteDTO.emailDiContatto());
+			cliente.setNomeContatto(clienteDTO.nomeContatto());
+			cliente.setCognomeContatto(clienteDTO.cognomeContatto());
+			cliente.setTelefonoDiContatto(clienteDTO.telefonoDiContatto());
+			cliente.setLogoAziendale(clienteDTO.logoAziendale());
+			cliente.setTipoCliente(clienteDTO.tipoCliente());
+		}
 		return clienteRepository.save(cliente);
 	}
 

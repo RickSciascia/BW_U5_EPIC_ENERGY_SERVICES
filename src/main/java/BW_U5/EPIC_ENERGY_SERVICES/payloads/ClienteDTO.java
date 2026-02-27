@@ -8,22 +8,21 @@ import java.time.LocalDate;
 public record ClienteDTO(
 		@NotBlank
 		String ragioneSociale,
-		long partitaIva,
+		Long partitaIva,
 		@Email(message = "Inserire un indirizzo email valido")
 		@NotBlank
 		String email,
 		@NotNull
 		@PastOrPresent
 		LocalDate dataInserimento,
-		@PastOrPresent
 		LocalDate dataUltimoContatto,
 		@NotNull
 		@Positive
-		double fatturatoAnnuale,
+		Double fatturatoAnnuale,
 		@Email(message = "Inserire una pec valida")
 		@NotBlank
 		String pec,
-		long numeroDiTelefono,
+		Long numeroDiTelefono,
 		@Email(message = "Inserire un indirizzo email valido")
 		@NotBlank
 		String emailDiContatto,
@@ -31,7 +30,7 @@ public record ClienteDTO(
 		String nomeContatto,
 		@NotBlank
 		String cognomeContatto,
-		long telefonoDiContatto,
+		Long telefonoDiContatto,
 		String logoAziendale,
 		TipoCliente tipoCliente,
 		IndirizzoDTO indirizzoLegale,

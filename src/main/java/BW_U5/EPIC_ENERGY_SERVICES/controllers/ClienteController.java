@@ -84,7 +84,6 @@ public class ClienteController {
 	//---------------------------------------- P U T ----------------------------------------------
 	@PutMapping("/{clients_id}")
 	@PreAuthorize("hasAuthority('ADMIN')")
-	@ResponseStatus(HttpStatus.UPGRADE_REQUIRED)
 	public Cliente updateCliente(@PathVariable("clients_id") long clients_id, ClienteDTO clienteDTO) {
 		return clienteService.updateCliente(clients_id, clienteDTO);
 	}

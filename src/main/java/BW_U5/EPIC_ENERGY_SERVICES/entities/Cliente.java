@@ -18,22 +18,22 @@ public class Cliente {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Setter(AccessLevel.NONE)
-	private long id;
+	private Long id;
 	@Column(nullable = false)
 	private String ragioneSociale;
 	@Column(nullable = false, unique = true)
 	@Setter(AccessLevel.NONE)
-	private long partitaIva;
+	private Long partitaIva;
 	@Column(nullable = false, unique = true)
 	private String email;
 	private LocalDate dataInserimento;
 	private LocalDate dataUltimoContatto;
 	@Setter(AccessLevel.NONE)
-	private double fatturatoAnnuale;
+	private Double fatturatoAnnuale;
 	@Column(nullable = false, unique = true)
 	private String pec;
 	@Column(nullable = false)
-	private long numeroDiTelefono;
+	private Long numeroDiTelefono;
 	@Column(nullable = false, unique = true)
 	private String emailDiContatto;
 	@Column(nullable = false)
@@ -41,7 +41,7 @@ public class Cliente {
 	@Column(nullable = false)
 	private String cognomeContatto;
 	@Column(nullable = false)
-	private long telefonoDiContatto;
+	private Long telefonoDiContatto;
 	private String logoAziendale;
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -53,17 +53,17 @@ public class Cliente {
 
 	public Cliente(
 			String ragioneSociale,
-			long partitaIva,
+			Long partitaIva,
 			String email,
 			LocalDate dataInserimento,
 			LocalDate dataUltimoContatto,
-			double fatturatoAnnuale,
+			Double fatturatoAnnuale,
 			String pec,
-			long numeroDiTelefono,
+			Long numeroDiTelefono,
 			String emailDiContatto,
 			String nomeContatto,
 			String cognomeContatto,
-			long telefonoDiContatto,
+			Long telefonoDiContatto,
 			TipoCliente tipoCliente,
 			Indirizzo indirizzoLegale,
 			Indirizzo indirizzoCommerciale
